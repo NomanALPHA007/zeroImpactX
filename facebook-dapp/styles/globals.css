@@ -1,0 +1,102 @@
+@import url("../public/css/emoji.css");
+@import url("../public/css/feather.css");
+@import url("../public/css/lightbox.css");
+@import url("../public/css/style.css");
+@import url("../public/css/themify-icons.css");
+@import url("../public/vendor/owl-carousel/css/owl.carousel.min.css");
+@import url("../public/vendor/owl-carousel/css/owl.theme.default.css");
+
+.new_flex {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.new_class_flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.new_chat_modal {
+  height: 17rem;
+  overflow-y: scroll;
+}
+
+.new_margin {
+  margin-top: 1rem;
+}
+
+.createPost {
+  z-index: 1111111111111111111111;
+  top: 50%;
+  left: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.new_loader {
+  z-index: 111111111111111;
+  top: 50%;
+  left: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* //LOADER */
+.dots-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  margin-right: 10px;
+  border-radius: 10px;
+  background-color: #b3d4fc;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.dot:last-child {
+  margin-right: 0;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.3s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.1s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    background-color: #b3d4fc;
+    box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: #6793fb;
+    box-shadow: 0 0 0 10px rgba(178, 212, 252, 0);
+  }
+
+  100% {
+    transform: scale(0.8);
+    background-color: #b3d4fc;
+    box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+}
