@@ -1,4 +1,4 @@
-# 🌐 **ImpactX** – Revolutionizing Social Media Through Decentralization and Social Good
+# 🌐 **zeroImpactX** – Revolutionizing Social Media Through Decentralization and Social Good
 
 ![ImpactX Banner](https://yourimageurlhere.com/banner.gif) <!-- Add a custom banner with your logo and mission statement -->
 
