@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }) {
           sizes="16x16"
           href="images/favicon.png"
         />
-        <title>@theblockchaincoders Social</title>
+        <title>@zeroImpactX</title>
       </Head>
       <SOCAIL_MEDIA_Provider>
         <Component {...pageProps} />
