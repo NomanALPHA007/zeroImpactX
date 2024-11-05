@@ -20,7 +20,7 @@ const NavTop = ({
         {/* <a href="/"> */}
         <i class="feather-zap text-success display1-size me-2 ms-0"></i>
         <span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">
-          TBCoders.
+          ImpactX
         </span>
       </a>
       <a

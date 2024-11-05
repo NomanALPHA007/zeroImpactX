@@ -475,25 +475,25 @@ export const SOCAIL_MEDIA_Provider = ({ children }) => {
       notifySuccess("Wait creating group...");
       const SOCIAL_CONTRACT = await CALLING_CONTRACT();
 
-      const GROUP_NAME_1 = "DEFI";
-      const GROUP_DES_1 =
-        "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ‍ ";
+      //const GROUP_NAME_1 = "DEFI";
+      //const GROUP_DES_1 =
+      //  "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ‍ ";
 
-      // const GROUP_NAME_2 = "NFT";
-      // const GROUP_DES_2 =
-      //   "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ";
+      //const GROUP_NAME_2 = "NFT";
+      //const GROUP_DES_2 =
+      //  "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ";
 
-      // const GROUP_NAME_3 = "DEVELOPER";
-      // const GROUP_DES_3 =
-      //   "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ";
+      //const GROUP_NAME_3 = "DEVELOPER";
+      //const GROUP_DES_3 =
+      //  "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ";
 
-      // const GROUP_NAME_4 = "WEB3";
-      // const GROUP_DES_4 =
-      //   "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ";
+      const GROUP_NAME_4 = "WEB3";
+      const GROUP_DES_4 =
+        "The Blockchain Coders brings together organizations from across web3 to create the largest community learning blockchain education. ";
 
       const transaction = await SOCIAL_CONTRACT.createGroup(
-        GROUP_NAME_1,
-        GROUP_DES_1
+        GROUP_NAME_4,
+        GROUP_DES_4
       );
 
       await transaction.wait();
