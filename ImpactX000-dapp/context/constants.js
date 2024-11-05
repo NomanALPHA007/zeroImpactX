@@ -5,11 +5,12 @@ import axios from "axios";
 import socialMediaDapp from "./SocialMediaDapp.json";
 
 export const CONTRACT_ABI = socialMediaDapp.abi;
-export const CONTRACT_ADDRESS = "0x9334C7113a66Abb257dcE66547193B8b24664AE0";
+export const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 //PINATA KEYS
-export const PINATA_API_KEY = "API_KEY";
-export const PINATA_SECRECT_KEY = "SECERCT_KEY";
+export const PINATA_API_KEY = "27553e13c98f803427ad";
+export const PINATA_SECRECT_KEY =
+  "903e5e05fb009a49fe50506435e8afad9dfd12b59de65004f353d8b689be2572";
 
 //NETWORK
 const networks = {
@@ -24,17 +25,7 @@ const networks = {
     rpcUrls: ["https://rpc-amoy.polygon.technology/"],
     blockExplorerUrls: ["https://www.oklink.com/amoy"],
   },
-  polygon_mumbai: {
-    chainId: `0x${Number(80001).toString(16)}`,
-    chainName: "Polygon Mumbai",
-    nativeCurrency: {
-      name: "MATIC",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://rpc.ankr.com/polygon_mumbai"],
-    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
-  },
+
   polygon: {
     chainId: `0x${Number(137).toString(16)}`,
     chainName: "Polygon Mainnet",
@@ -83,8 +74,8 @@ const networks = {
     chainId: `0x${Number(31337).toString(16)}`,
     chainName: "localhost",
     nativeCurrency: {
-      name: "GO",
-      symbol: "GO",
+      name: "ImpactX",
+      symbol: "ImpactX",
       decimals: 18,
     },
     rpcUrls: ["http://127.0.0.1:8545/"],
@@ -109,7 +100,7 @@ const changeNetwork = async ({ networkName }) => {
 };
 
 export const handleNetworkSwitch = async () => {
-  const networkName = "polygon_amoy";
+  const networkName = "localhost";
   await changeNetwork({ networkName });
 };
 
