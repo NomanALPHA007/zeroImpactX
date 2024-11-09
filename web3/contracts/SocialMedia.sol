@@ -460,3 +460,241 @@ contract SocialMediaDapp {
 
 }
 
+// Our Goal smart contract
+/*
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.10;
+
+contract SocialMediaDapp {
+
+    address public admin;
+    address[] internal addresses;
+    mapping(string => address) internal names;
+    mapping(address => Profile) public profiles;
+    mapping(address => mapping(address => Profile)) internal followers;
+    mapping(address => mapping(address => Profile)) internal following;
+    mapping(address => Post[]) internal posts;
+
+    // Updated sections for new functionality
+    struct Charity {
+        address charityAddress;
+        string name;
+    }
+
+    Charity[] public charities;
+    uint256 public totalCharities;
+    uint256 public totalGroups;
+    uint256 public _postID;
+    uint256 public _userID;
+
+    mapping(bytes32 => message[]) allMessages;
+    mapping(uint256 => Group) public groups;
+    mapping(address => uint256) public rewards; // User rewards for social good actions
+    mapping(uint256 => Post) public allNFTs; // Mapping for NFTs created from posts
+
+    struct Profile {
+        address owner;
+        string name;
+        uint timeCreated;
+        uint id;
+        uint postCount;
+        uint followerCount;
+        uint followingCount;
+        address[] followers;
+        address[] following;
+    }
+
+    struct AllUserStruck {
+        address owner;
+        string name;
+        uint timeCreated;
+        uint id;
+        uint postCount;
+        uint followerCount;
+        uint followingCount;
+    }
+
+    struct Post {
+        address author;
+        string postType;
+        string postDescription;
+        string postURL;
+        uint timeCreated;
+        uint postID;
+        uint likes;
+        string[] comments;
+        bool isNFT; // Marks if the post is an NFT
+    }
+
+    AllUserStruck[] getAllUsers;
+
+    struct Group {
+        address[] members;
+        mapping(uint256 => string) messages;
+        string name;
+        string description;
+        uint256 groupID;
+    }
+
+    struct message {
+        address sender;
+        uint256 timestamp;
+        string msg;
+    }
+
+    event GroupCreated(uint256 groupId, address admin, string name, string description);
+    event UserJoinedGroup(uint256 groupId, address user);
+    event MessageAdded(uint256 groupId, address sender, string message);
+    event NFTCreated(uint256 postID, address creator, uint256 charityPercentage, address charityAddress);
+    event DonationSent(address from, address to, uint amount);
+    event RewardDistributed(address user, uint amount);
+
+    modifier senderHasProfile() {
+        require(profiles[msg.sender].owner != address(0x0), "ERROR: <Must create a profile to perform this action>");
+        _;
+    }
+
+    modifier profileExists(address _address) {
+        require(profiles[_address].owner != address(0x0), "ERROR: <Profile does not exist>");
+        _;
+    }
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can call this function");
+        _;
+    }
+
+    constructor() {
+        admin = msg.sender;
+    }
+
+    // Existing profile creation function
+    function createProfile(string calldata _name) external nonEmptyInput(_name) {
+        require(profiles[msg.sender].owner == address(0x0), "ERROR: <You have already created a profile>");
+        require(names[_name] == address(0x0), "ERROR: <Username taken>");
+
+        _userID++;
+        uint256 userID = _userID;
+
+        names[_name] = msg.sender;
+        profiles[msg.sender] = Profile({
+            owner: msg.sender,
+            name: _name,
+            timeCreated: block.timestamp,
+            id: userID,
+            postCount: 0,
+            followerCount: 0,
+            followingCount: 0,
+            followers: new address[](0x0),
+            following: new address[](0x0)
+        });
+        addresses.push(msg.sender);
+        getAllUsers.push(AllUserStruck(msg.sender, _name, block.timestamp, userID, 0,0,0));
+    }
+
+    // New Functionality for NFT Creation and Charity Integration
+
+    // Add charity
+    function addCharity(address _charityAddress, string memory _name) external onlyAdmin {
+        charities.push(Charity(_charityAddress, _name));
+        totalCharities++;
+    }
+
+    // Mint NFT from Post with charity integration
+    function mintNFT(uint256 _postID, uint256 _charityIndex, uint256 _charityPercentage) external senderHasProfile {
+        require(_charityIndex < totalCharities, "Invalid charity selection");
+        require(_charityPercentage <= 100, "Charity percentage must be between 0 and 100");
+
+        Post storage post = posts[msg.sender][_postID];
+        require(!post.isNFT, "Post is already an NFT");
+
+        post.isNFT = true;
+        allNFTs[_postID] = post;
+        
+        // Log NFT creation
+        emit NFTCreated(_postID, msg.sender, _charityPercentage, charities[_charityIndex].charityAddress);
+    }
+
+    // Rewards system for social good actions
+    function verifyActionAndReward(address _user, uint _points) external onlyAdmin {
+        rewards[_user] += _points;
+        emit RewardDistributed(_user, _points);
+    }
+
+    // DAO Voting Functionality
+    struct Proposal {
+        uint id;
+        string description;
+        uint voteCount;
+    }
+
+    Proposal[] public proposals;
+    mapping(address => uint) public votes;
+
+    function createProposal(string calldata _description) external {
+        proposals.push(Proposal(proposals.length, _description, 0));
+    }
+
+    function voteOnProposal(uint _proposalId) external senderHasProfile {
+        require(votes[msg.sender] == 0, "User has already voted");
+        require(_proposalId < proposals.length, "Invalid proposal ID");
+
+        proposals[_proposalId].voteCount++;
+        votes[msg.sender] = _proposalId;
+    }
+
+    // Ad Revenue Sharing and Viewer Rewards
+    function distributeAdRevenue(address creator, address viewer, uint256 adRevenue) external onlyAdmin {
+        uint256 creatorShare = (adRevenue * 50) / 100;
+        uint256 viewerShare = (adRevenue * 30) / 100;
+        uint256 charityShare = (adRevenue * 20) / 100;
+
+        // Transfer revenue to creator, viewer, and selected charity
+        payable(creator).transfer(creatorShare);
+        payable(viewer).transfer(viewerShare);
+        payable(charities[0].charityAddress).transfer(charityShare);
+    }
+
+    // Donation Function
+    function donateToCharity(uint256 charityIndex) external payable {
+        require(charityIndex < totalCharities, "Invalid charity selection");
+        payable(charities[charityIndex].charityAddress).transfer(msg.value);
+        emit DonationSent(msg.sender, charities[charityIndex].charityAddress, msg.value);
+    }
+
+    // Group-related NFT creation and charity events
+    function createGroupNFT(uint256 groupId, uint256 _charityIndex, uint256 _charityPercentage) external onlyGroupMember(groupId) {
+        require(_charityIndex < totalCharities, "Invalid charity selection");
+        require(_charityPercentage <= 100, "Charity percentage must be between 0 and 100");
+
+        // Log event
+        emit NFTCreated(groupId, msg.sender, _charityPercentage, charities[_charityIndex].charityAddress);
+    }
+
+    // Crowdfunding for social impact projects
+    struct Crowdfund {
+        address creator;
+        uint targetAmount;
+        uint currentAmount;
+        bool isActive;
+    }
+
+    Crowdfund[] public crowdfunds;
+
+    function createCrowdfund(uint _targetAmount) external senderHasProfile {
+        crowdfunds.push(Crowdfund(msg.sender, _targetAmount, 0, true));
+    }
+
+    function contributeToCrowdfund(uint _crowdfundId) external payable {
+        Crowdfund storage crowdfund = crowdfunds[_crowdfundId];
+        require(crowdfund.isActive, "Crowdfunding is closed");
+
+        crowdfund.currentAmount += msg.value;
+        if (crowdfund.currentAmount >= crowdfund.targetAmount) {
+            crowdfund.isActive = false;
+        }
+    }
+}
+
+*/
+
